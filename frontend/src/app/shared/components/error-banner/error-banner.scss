@@ -1,0 +1,10 @@
+.error-banner {
+  align-items: center;
+  background: color-mix(in srgb, var(--mat-sys-error) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-error) 30%, transparent);
+  border-radius: 8px;
+  color: var(--mat-sys-error);
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+}

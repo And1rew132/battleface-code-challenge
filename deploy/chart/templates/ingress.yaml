@@ -1,0 +1,62 @@
+{{- if .Values.basicAuth.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Values.basicAuth.middlewareName }}
+  namespace: {{ include "battleface.namespace" . }}
+  labels:
+    {{- include "battleface.labels" . | nindent 4 }}
+spec:
+  basicAuth:
+    secret: {{ .Values.basicAuth.secretName }}
+    realm: {{ .Values.basicAuth.realm }}
+    removeHeader: true
+---
+{{- end }}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "battleface.name" . }}
+  namespace: {{ include "battleface.namespace" . }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.className }}
+  labels:
+    {{- include "battleface.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    {{- toYaml .Values.ingress.entryPoints | nindent 4 }}
+  routes:
+    - match: Host(`{{ .Values.host }}`) && Path(`/up`)
+      kind: Rule
+      services:
+        - name: {{ include "battleface.name" . }}-backend
+          port: {{ .Values.backend.port }}
+    - match: Host(`{{ .Values.host }}`) && PathPrefix(`/auth`)
+      kind: Rule
+      {{- if .Values.basicAuth.enabled }}
+      middlewares:
+        - name: {{ .Values.basicAuth.middlewareName }}
+      {{- end }}
+      services:
+        - name: {{ include "battleface.name" . }}-backend
+          port: {{ .Values.backend.port }}
+    - match: Host(`{{ .Values.host }}`) && PathPrefix(`/quotation`)
+      kind: Rule
+      {{- if .Values.basicAuth.enabled }}
+      middlewares:
+        - name: {{ .Values.basicAuth.middlewareName }}
+      {{- end }}
+      services:
+        - name: {{ include "battleface.name" . }}-backend
+          port: {{ .Values.backend.port }}
+    - match: Host(`{{ .Values.host }}`)
+      kind: Rule
+      {{- if .Values.basicAuth.enabled }}
+      middlewares:
+        - name: {{ .Values.basicAuth.middlewareName }}
+      {{- end }}
+      services:
+        - name: {{ include "battleface.name" . }}-frontend
+          port: {{ .Values.frontend.servicePort }}
+  tls:
+    certResolver: {{ .Values.ingress.certResolver }}

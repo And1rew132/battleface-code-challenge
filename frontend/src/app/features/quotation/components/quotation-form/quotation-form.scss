@@ -1,0 +1,124 @@
+.quote-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.age-panel,
+.date-panel {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.section-heading {
+  align-items: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr auto;
+}
+
+.section-heading h2,
+.section-heading p {
+  margin: 0;
+}
+
+.section-heading h2 {
+  font: var(--mat-sys-title-medium);
+}
+
+.section-heading p {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.age-list {
+  display: grid;
+  gap: 12px;
+}
+
+.age-row {
+  align-items: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(116px, 140px) minmax(180px, 1fr) 40px;
+}
+
+.age-meta {
+  display: grid;
+  gap: 2px;
+}
+
+.age-meta span {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.age-meta strong {
+  font: var(--mat-sys-title-large);
+}
+
+.age-range {
+  accent-color: var(--mat-sys-primary);
+  width: 100%;
+}
+
+.date-panel {
+  justify-items: stretch;
+}
+
+.date-panel mat-calendar {
+  border-radius: 8px;
+  max-width: 360px;
+  width: 100%;
+}
+
+:host ::ng-deep .in-range .mat-calendar-body-cell-content {
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+}
+
+:host ::ng-deep .range-start .mat-calendar-body-cell-content,
+:host ::ng-deep .range-end .mat-calendar-body-cell-content {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.submit-button {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+  justify-self: start;
+  min-width: 136px;
+}
+
+.submit-button.loading {
+  justify-content: center;
+  pointer-events: none;
+}
+
+.submit-button.loading span {
+  opacity: 0.74;
+}
+
+.submit-button mat-progress-spinner {
+  display: inline-flex;
+  flex: 0 0 18px;
+  vertical-align: middle;
+}
+
+.submit-button mat-progress-spinner ::ng-deep circle {
+  stroke: currentColor;
+}
+
+@media (max-width: 560px) {
+  .age-row,
+  .section-heading {
+    grid-template-columns: 1fr;
+  }
+
+  .age-row button {
+    justify-self: start;
+  }
+}

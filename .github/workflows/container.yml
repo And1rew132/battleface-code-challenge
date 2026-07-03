@@ -1,0 +1,75 @@
+name: Build Containers
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  containers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Test frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm test
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: deploy/docker/backend/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/and1rew132/battleface-code-challenge-backend:main
+            ghcr.io/and1rew132/battleface-code-challenge-backend:${{ github.sha }}
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: deploy/docker/frontend/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/and1rew132/battleface-code-challenge-frontend:main
+            ghcr.io/and1rew132/battleface-code-challenge-frontend:${{ github.sha }}
+
+      - name: Pin deployed images to commit
+        if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+        run: |
+          sed -i "/repository: ghcr.io\\/and1rew132\\/battleface-code-challenge-backend/{n;s/tag: .*/tag: ${GITHUB_SHA}/;}" deploy/chart/values.yaml
+          sed -i "/repository: ghcr.io\\/and1rew132\\/battleface-code-challenge-frontend/{n;s/tag: .*/tag: ${GITHUB_SHA}/;}" deploy/chart/values.yaml
+          if git diff --quiet -- deploy/chart/values.yaml; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add deploy/chart/values.yaml
+          git commit -m "Deploy ${GITHUB_SHA} [skip ci]"
+          git push

@@ -1,0 +1,38 @@
+<form class="quote-form" [formGroup]="form" (ngSubmit)="submit()">
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email" />
+    <mat-error>Enter a valid email.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Password</mat-label>
+    <input matInput type="password" formControlName="password" />
+    <mat-error>Password is required.</mat-error>
+  </mat-form-field>
+
+  @if (error(); as message) {
+    <app-error-banner [message]="message"></app-error-banner>
+  }
+
+  <button
+    matButton="filled"
+    type="submit"
+    class="submit-button"
+    [class.loading]="loading()"
+    [attr.aria-busy]="loading()"
+    [attr.aria-disabled]="loading()"
+  >
+    @if (loading()) {
+      <mat-progress-spinner
+        matButtonIcon
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+      ></mat-progress-spinner>
+    } @else {
+      <mat-icon aria-hidden="true">login</mat-icon>
+    }
+    <span>{{ loading() ? 'Signing in' : 'Sign in' }}</span>
+  </button>
+</form>

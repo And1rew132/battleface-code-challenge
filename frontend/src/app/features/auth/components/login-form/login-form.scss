@@ -1,0 +1,32 @@
+.quote-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.submit-button {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+  justify-self: start;
+  min-width: 136px;
+}
+
+.submit-button.loading {
+  justify-content: center;
+  pointer-events: none;
+}
+
+.submit-button.loading span {
+  opacity: 0.74;
+}
+
+.submit-button mat-progress-spinner {
+  display: inline-flex;
+  flex: 0 0 18px;
+  vertical-align: middle;
+}
+
+.submit-button mat-progress-spinner ::ng-deep circle {
+  stroke: currentColor;
+}

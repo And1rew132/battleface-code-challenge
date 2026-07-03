@@ -1,0 +1,98 @@
+@if (!authenticated()) {
+  <main class="login-shell">
+    <section class="login-panel" aria-label="BattleFace quotation sign in">
+      <aside class="login-sidebar">
+        <div class="brand-mark">BF</div>
+        <div>
+          <h1>BattleFace quotations</h1>
+          <p>Sign in to build travel insurance quotes with age bands, dates, and currency pricing.</p>
+        </div>
+        <mat-nav-list>
+          <a mat-list-item>
+            <mat-icon matListItemIcon aria-hidden="true">verified_user</mat-icon>
+            <span matListItemTitle>Authenticated API</span>
+          </a>
+          <a mat-list-item>
+            <mat-icon matListItemIcon aria-hidden="true">currency_exchange</mat-icon>
+            <span matListItemTitle>Currency rates</span>
+          </a>
+          <a mat-list-item>
+            <mat-icon matListItemIcon aria-hidden="true">date_range</mat-icon>
+            <span matListItemTitle>Date range quotes</span>
+          </a>
+        </mat-nav-list>
+      </aside>
+
+      <mat-card class="login-card">
+        <mat-card-header>
+          <mat-card-title>Sign in</mat-card-title>
+          <mat-card-subtitle>BattleFace coding challenge</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <app-login-form
+            [loading]="authLoading()"
+            [error]="error()"
+            (login)="login($event)"
+          ></app-login-form>
+        </mat-card-content>
+      </mat-card>
+    </section>
+  </main>
+} @else {
+  <main class="app-shell">
+    <mat-toolbar class="topbar">
+      <div class="topbar-brand">
+        <div class="brand-mark">BF</div>
+        <div>
+          <span class="topbar-title">Travel quotation</span>
+          <span class="topbar-subtitle">BattleFace coding challenge</span>
+        </div>
+      </div>
+      <button
+        mat-button
+        type="button"
+        class="logout-button"
+        [disabled]="authLoading()"
+        (click)="logout()"
+      >
+        <mat-icon aria-hidden="true">logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-toolbar>
+
+    <section class="content-shell">
+      <div class="quote-layout">
+        <mat-card class="quote-card">
+          <mat-card-header>
+            <mat-card-title>Quote details</mat-card-title>
+            <mat-card-subtitle>Set travellers, currency, and cover dates.</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <app-quotation-form
+              [currencies]="currencies"
+              [loading]="loading()"
+              [error]="error()"
+              (quotation)="submit($event)"
+            ></app-quotation-form>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="summary-card">
+          <mat-card-header>
+            <mat-card-title>Quote summary</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (quote(); as currentQuote) {
+              <app-quote-result [quote]="currentQuote"></app-quote-result>
+            } @else {
+              <div class="empty-result">
+                <mat-icon aria-hidden="true">receipt_long</mat-icon>
+                <span>No quote calculated yet.</span>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </section>
+  </main>
+}

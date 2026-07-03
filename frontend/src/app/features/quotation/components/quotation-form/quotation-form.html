@@ -1,0 +1,100 @@
+<form class="quote-form" [formGroup]="form" (ngSubmit)="submit()">
+  <section class="age-panel" formArrayName="ages">
+    <div class="section-heading">
+      <div>
+        <h2>Travellers</h2>
+        <p>Ages 18 to 70</p>
+      </div>
+      <button mat-stroked-button type="button" (click)="addAge()">
+        <mat-icon aria-hidden="true">add</mat-icon>
+        <span>Add</span>
+      </button>
+    </div>
+
+    <div class="age-list">
+      @for (ageControl of ages.controls; track ageControl; let index = $index) {
+        <div class="age-row">
+          <div class="age-meta">
+            <span>Traveller {{ index + 1 }}</span>
+            <strong>{{ ageControl.value }}</strong>
+          </div>
+          <input
+            class="age-range"
+            type="range"
+            min="18"
+            max="70"
+            step="1"
+            [attr.aria-label]="'Traveller ' + (index + 1) + ' age'"
+            [formControlName]="index"
+          />
+          <button
+            mat-icon-button
+            type="button"
+            aria-label="Remove traveller"
+            [disabled]="ages.length === 1"
+            (click)="removeAge(index)"
+          >
+            <mat-icon aria-hidden="true">remove</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+
+    @if (ages.invalid && ages.touched) {
+      <app-error-banner message="All traveller ages must be between 18 and 70."></app-error-banner>
+    }
+  </section>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Currency</mat-label>
+    <mat-select formControlName="currency_id">
+      @for (currency of currencies(); track currency) {
+        <mat-option [value]="currency">{{ currency }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <section class="date-panel">
+    <div class="section-heading compact">
+      <div>
+        <h2>Cover dates</h2>
+        <p>{{ dateRangeLabel() }}</p>
+      </div>
+    </div>
+    <mat-calendar
+      [dateClass]="dateClass"
+      [selected]="selectedRange()"
+      [startAt]="selectedRange().start"
+      (selectedChange)="selectDate($event)"
+    ></mat-calendar>
+  </section>
+
+  @if (error(); as message) {
+    <app-error-banner [message]="message"></app-error-banner>
+  }
+
+  @if (form.hasError('dateRange') && form.touched) {
+    <app-error-banner message="End date must be on or after the start date."></app-error-banner>
+  }
+
+  <button
+    matButton="filled"
+    type="submit"
+    class="submit-button"
+    [class.loading]="loading()"
+    [attr.aria-busy]="loading()"
+    [attr.aria-disabled]="loading()"
+  >
+    @if (loading()) {
+      <mat-progress-spinner
+        matButtonIcon
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+      ></mat-progress-spinner>
+    } @else {
+      <mat-icon aria-hidden="true">request_quote</mat-icon>
+    }
+    <span>{{ loading() ? 'Calculating' : 'Calculate' }}</span>
+  </button>
+</form>

@@ -1,0 +1,85 @@
+nameOverride: battleface-code-challenge
+
+namespace:
+  create: true
+  name: battleface-code-challenge
+
+host: battleface-code-challenge.andrewazzopardi.dev
+
+imagePullSecrets:
+  - name: ghcr-battleface-code-challenge
+
+images:
+  backend:
+    repository: ghcr.io/and1rew132/battleface-code-challenge-backend
+    tag: main
+    pullPolicy: Always
+  frontend:
+    repository: ghcr.io/and1rew132/battleface-code-challenge-frontend
+    tag: main
+    pullPolicy: Always
+
+backend:
+  replicaCount: 1
+  port: 8000
+  existingSecret: ""
+  appKey: ""
+  jwtSecret: ""
+  demoEmail: demo@battleface.test
+  demoPassword: ""
+  runMigrations: true
+  runSeeders: true
+  currencyRates:
+    EUR: "1.0"
+    GBP: "0.86"
+    USD: "1.09"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+frontend:
+  replicaCount: 1
+  servicePort: 80
+  containerPort: 8080
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+postgres:
+  enabled: true
+  image: postgres:16-alpine
+  database: battleface
+  username: battleface
+  existingSecret: ""
+  password: ""
+  secretName: battleface-code-challenge-db
+  persistence:
+    size: 1Gi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+basicAuth:
+  enabled: true
+  middlewareName: battleface-code-challenge-basic-auth
+  secretName: battleface-code-challenge-basic-auth
+  realm: BattleFace Assessment
+
+ingress:
+  className: traefik
+  entryPoints:
+    - web
+    - websecure
+  certResolver: myresolver

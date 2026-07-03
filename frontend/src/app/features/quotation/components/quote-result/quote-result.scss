@@ -1,0 +1,16 @@
+.quote-result {
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  display: grid;
+  gap: 4px;
+  margin-top: 24px;
+  padding-top: 24px;
+}
+
+.quote-result span,
+.quote-result small {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.quote-result strong {
+  font: var(--mat-sys-display-small);
+}
