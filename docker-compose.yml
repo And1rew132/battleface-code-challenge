@@ -42,6 +42,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    ports:
+      - "8001:8000"
     volumes:
       - ./backend:/app
       - backend_vendor:/app/vendor
