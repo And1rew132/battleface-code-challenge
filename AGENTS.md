@@ -56,3 +56,5 @@ The Docker Compose backend port is `8001` because `8000` is commonly occupied in
 - The Helm chart in `deploy/chart/` targets Traefik `IngressRoute`, optional basic auth middleware, a dedicated namespace, GHCR image pull secrets, and an in-cluster Postgres deployment.
 - The static frontend container serves Nginx on port `8080` with `/health`; the chart exposes it through a service on port `80`.
 - The app keeps API calls same-origin. Traefik routes `/auth`, `/quotation`, and `/up` to the backend, and all other paths to the frontend.
+
+- PostgreSQL replicas use `postgres.replicaCount`. To suspend all workloads, set backend/frontend/postgres replicaCount to 0 while keeping postgres.enabled=true so the PVC is retained.
