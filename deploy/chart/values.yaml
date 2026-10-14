@@ -12,11 +12,11 @@ imagePullSecrets:
 images:
   backend:
     repository: ghcr.io/and1rew132/battleface-code-challenge-backend
-    tag: 9bf17a8437a46d4d81e6267b0dd31713e366bc35
+    tag: 55a6e3028ceaa9f7d89f4b911d97508f3685d828
     pullPolicy: Always
   frontend:
     repository: ghcr.io/and1rew132/battleface-code-challenge-frontend
-    tag: 9bf17a8437a46d4d81e6267b0dd31713e366bc35
+    tag: 55a6e3028ceaa9f7d89f4b911d97508f3685d828
     pullPolicy: Always
 
 backend:
