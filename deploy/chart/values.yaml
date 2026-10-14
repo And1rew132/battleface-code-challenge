@@ -55,6 +55,7 @@ frontend:
 
 postgres:
   enabled: true
+  replicaCount: 1
   image: postgres:16-alpine
   database: battleface
   username: battleface
